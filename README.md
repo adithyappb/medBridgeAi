@@ -24,6 +24,9 @@ npm install
 # Launch development server
 npm run dev
 ```
+## 🎯 Output
+<img width="1856" height="1018" alt="Screenshot 2026-02-08 105416" src="https://github.com/user-attachments/assets/e10ce8d7-eed2-4163-8ded-9695f98811ca" />
+
 
 ## 🛠️ Key Technologies
 
