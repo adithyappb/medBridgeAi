@@ -189,7 +189,7 @@ function haversineDistance(lat1: number, lng1: number, lat2: number, lng2: numbe
   const R = 6371;
   const dLat = (lat2 - lat1) * 0.017453292519943295; // Math.PI / 180
   const dLng = (lng2 - lng1) * 0.017453292519943295;
-  const a = 
+  const a =
     Math.sin(dLat * 0.5) * Math.sin(dLat * 0.5) +
     Math.cos(lat1 * 0.017453292519943295) * Math.cos(lat2 * 0.017453292519943295) *
     Math.sin(dLng * 0.5) * Math.sin(dLng * 0.5);
@@ -277,7 +277,7 @@ function buildNetworkGraph(facilities: CleanedFacility[]): {
           edgeSet.add(edgeKey);
           const travelTime = estimateTravelTime(distance, distance < 20);
           const qualityBonus = (other.qualityScore - node.qualityScore) / 100;
-          
+
           edges.push({
             from: node.facilityId,
             to: other.facilityId,
@@ -327,7 +327,7 @@ function buildNetworkGraph(facilities: CleanedFacility[]): {
  */
 function identifyHubFacilities(nodes: OptimizationNode[], edges: NetworkEdge[], topN: number = 5): string[] {
   const connectivity = new Map<string, number>();
-  
+
   for (const edge of edges) {
     connectivity.set(edge.from, (connectivity.get(edge.from) || 0) + 1);
     connectivity.set(edge.to, (connectivity.get(edge.to) || 0) + 1);
@@ -349,7 +349,7 @@ function identifyHubFacilities(nodes: OptimizationNode[], edges: NetworkEdge[], 
  */
 function detectCoverageGaps(nodes: OptimizationNode[], regionStats: RegionStats[]): CoverageGap[] {
   const gaps: CoverageGap[] = [];
-  
+
   // Group nodes by their actual region (from address.stateOrRegion)
   const regionNodeMap = new Map<string, OptimizationNode[]>();
   for (const node of nodes) {
@@ -363,7 +363,7 @@ function detectCoverageGaps(nodes: OptimizationNode[], regionStats: RegionStats[
   for (const region of regionStats) {
     // Find nodes in this region (exact match or contains)
     let regionFacilities: OptimizationNode[] = regionNodeMap.get(region.name) || [];
-    
+
     // If exact match fails, try partial matching
     if (regionFacilities.length === 0) {
       const regionLower = region.name.toLowerCase();
@@ -381,10 +381,10 @@ function detectCoverageGaps(nodes: OptimizationNode[], regionStats: RegionStats[
     if (regionFacilities.length === 0) {
       // Region has no facilities - find distance from nearest facility anywhere
       let nearestDist = Infinity;
-      
+
       // Use region centroid estimate based on Ghana's geography
       centroid = getRegionCentroid(region.name);
-      
+
       for (const node of nodes) {
         const dist = haversineDistance(centroid.lat, centroid.lng, node.lat, node.lng);
         if (dist < nearestDist) {
@@ -398,7 +398,7 @@ function detectCoverageGaps(nodes: OptimizationNode[], regionStats: RegionStats[
       // Region has facilities - calculate average inter-facility distance
       let totalMinDistance = 0;
       let validCount = 0;
-      
+
       for (const facility of regionFacilities) {
         const dist = facility.nearestFacilityDistance;
         if (Number.isFinite(dist) && dist > 0) {
@@ -409,7 +409,7 @@ function detectCoverageGaps(nodes: OptimizationNode[], regionStats: RegionStats[
 
       avgDistance = validCount > 0 ? totalMinDistance / validCount : 0;
       avgTime = estimateTravelTime(avgDistance, avgDistance < 20);
-      
+
       // Calculate actual centroid from facilities
       centroid = {
         lat: regionFacilities.reduce((s, f) => s + f.lat, 0) / regionFacilities.length,
@@ -420,7 +420,7 @@ function detectCoverageGaps(nodes: OptimizationNode[], regionStats: RegionStats[
     // ONLY add as gap if travel time exceeds WHO 90-min threshold
     if (avgTime > WHO_ACCESS_THRESHOLD) {
       const urgencyScore = Math.min(avgTime / WHO_ACCESS_THRESHOLD, 1.0);
-      
+
       gaps.push({
         regionName: region.name,
         centroid,
@@ -428,9 +428,9 @@ function detectCoverageGaps(nodes: OptimizationNode[], regionStats: RegionStats[
         nearestFacilityTime: Math.round(avgTime * 10) / 10,
         populationEstimate: (region.totalFacilities || 1) * 30000 + 50000,
         urgencyScore,
-        recommendedAction: avgTime > 180 
+        recommendedAction: avgTime > 180
           ? 'Deploy mobile health unit immediately'
-          : avgTime > 120 
+          : avgTime > 120
             ? 'Establish permanent facility within 2 years'
             : 'Enhance existing facility capabilities',
       });
@@ -466,12 +466,12 @@ function getRegionCentroid(regionName: string): { lat: number; lng: number } {
   };
 
   const normalizedName = regionName.trim();
-  
+
   // Exact match
   if (regionCentroids[normalizedName]) {
     return regionCentroids[normalizedName];
   }
-  
+
   // Partial match
   const nameLower = normalizedName.toLowerCase();
   for (const [key, coords] of Object.entries(regionCentroids)) {
@@ -479,7 +479,7 @@ function getRegionCentroid(regionName: string): { lat: number; lng: number } {
       return coords;
     }
   }
-  
+
   // Default to Ghana center if unknown
   return { lat: 7.9465, lng: -1.0232 };
 }
@@ -497,10 +497,10 @@ function generateCriticalInsights(
   const whoComplianceScore = nodes.length > 0 ? Math.round((withinWHO / nodes.length) * 100) : 0;
 
   const accessibilityGrade: 'A' | 'B' | 'C' | 'D' | 'F' =
-    whoComplianceScore >= 90 ? 'A' :
-    whoComplianceScore >= 75 ? 'B' :
-    whoComplianceScore >= 60 ? 'C' :
-    whoComplianceScore >= 40 ? 'D' : 'F';
+    whoComplianceScore >= 98 ? 'A' :
+      whoComplianceScore >= 90 ? 'B' :
+        whoComplianceScore >= 75 ? 'C' :
+          whoComplianceScore >= 55 ? 'D' : 'F';
 
   // Connection counts for hub analysis - track unique connections per facility
   const connectionCounts = new Map<string, Set<string>>();
@@ -516,11 +516,11 @@ function generateCriticalInsights(
     const uniqueConnections = connectionCounts.get(node.facilityId)?.size || 0;
     const qualityScore = node.qualityScore;
     const nearestDist = Number.isFinite(node.nearestFacilityDistance) ? node.nearestFacilityDistance : 100;
-    
+
     // Hub score: connectivity * quality * accessibility (inverse of isolation)
     const accessibilityFactor = Math.max(1, 100 - nearestDist) / 100;
     const hubScore = (uniqueConnections * 0.4 + qualityScore * 0.4 + accessibilityFactor * 20);
-    
+
     return { node, uniqueConnections, hubScore, nearestDist };
   });
 
@@ -543,16 +543,16 @@ function generateCriticalInsights(
     const coverageRadius = Math.round(item.nearestDist * 0.6 + 2);
     const populationBase = 50000 + (item.node.qualityScore * 500);
     const connectionBonus = item.uniqueConnections * 8000;
-    const regionBonus = item.node.region.toLowerCase().includes('accra') ? 100000 : 
-                       item.node.region.toLowerCase().includes('ashanti') ? 80000 : 30000;
-    
+    const regionBonus = item.node.region.toLowerCase().includes('accra') ? 100000 :
+      item.node.region.toLowerCase().includes('ashanti') ? 80000 : 30000;
+
     return {
       name: item.node.name,
       coordinates: { lat: item.node.lat, lng: item.node.lng },
       currentCoverageRadius: coverageRadius,
       populationServed: Math.round(populationBase + connectionBonus + regionBonus),
       rank: index + 1,
-      reason: index === 0 
+      reason: index === 0
         ? `Best network position: ${item.uniqueConnections} direct links, quality ${item.node.qualityScore}/100, ${item.node.region}`
         : `${item.node.region}: ${item.uniqueConnections} connections, quality ${item.node.qualityScore}, coverage ${coverageRadius}km`,
     };
@@ -563,13 +563,13 @@ function generateCriticalInsights(
     .filter(gap => gap.urgencyScore >= 0.5 && gap.nearestFacilityTime > WHO_ACCESS_THRESHOLD)
     .slice(0, 5)
     .map(gap => {
-      const priority: 'critical' | 'high' | 'medium' = 
-        gap.urgencyScore >= 0.9 ? 'critical' : 
-        gap.urgencyScore >= 0.7 ? 'high' : 'medium';
+      const priority: 'critical' | 'high' | 'medium' =
+        gap.urgencyScore >= 0.9 ? 'critical' :
+          gap.urgencyScore >= 0.7 ? 'high' : 'medium';
 
-      const facilityType: 'hospital' | 'clinic' | 'health_center' = 
+      const facilityType: 'hospital' | 'clinic' | 'health_center' =
         gap.populationEstimate > 100000 ? 'hospital' :
-        gap.populationEstimate > 30000 ? 'clinic' : 'health_center';
+          gap.populationEstimate > 30000 ? 'clinic' : 'health_center';
 
       // Find actual nearest facility to this gap
       let nearestFacilityName = 'Nearest Regional Facility';
@@ -606,7 +606,7 @@ function generateCriticalInsights(
 
   // Network bottlenecks - limit to 5
   const networkBottlenecks: NetworkBottleneck[] = [];
-  
+
   for (const node of nodes) {
     if (networkBottlenecks.length >= 5) break;
     const connectionSet = connectionCounts.get(node.facilityId);
@@ -677,9 +677,9 @@ function calculateStatistics(responseTimes: number[]): StatisticalAnalysis {
 
   const effectSize = stdDev > 0 ? (WHO_ACCESS_THRESHOLD - mean) / stdDev : 0;
   const tStatistic = standardError > 0 ? (mean - WHO_ACCESS_THRESHOLD) / standardError : 0;
-  
+
   // Fast approximation for large samples
-  const pValue = n > 30 
+  const pValue = n > 30
     ? Math.max(0.0001, Math.min(1, 2 * (1 - normalCDF(Math.abs(tStatistic)))))
     : 0.05;
 
@@ -716,13 +716,13 @@ export function optimizeNetwork(
   // Calculate response times
   const responseTimes: number[] = [];
   const nodeEdgeMap = new Map<string, number[]>();
-  
+
   // Pre-index edges by node
   for (let i = 0; i < edges.length; i++) {
     const fromEdges = nodeEdgeMap.get(edges[i].from) || [];
     fromEdges.push(i);
     nodeEdgeMap.set(edges[i].from, fromEdges);
-    
+
     const toEdges = nodeEdgeMap.get(edges[i].to) || [];
     toEdges.push(i);
     nodeEdgeMap.set(edges[i].to, toEdges);
@@ -730,7 +730,7 @@ export function optimizeNetwork(
 
   for (const node of nodes) {
     const nodeEdgeIndices = nodeEdgeMap.get(node.facilityId);
-    
+
     if (nodeEdgeIndices && nodeEdgeIndices.length > 0) {
       let minTime = Infinity;
       for (const idx of nodeEdgeIndices) {
@@ -750,7 +750,7 @@ export function optimizeNetwork(
   // Calculate metrics efficiently
   const sortedTimes = [...responseTimes].sort((a, b) => a - b);
   const n = responseTimes.length;
-  
+
   let sum = 0;
   let withinThreshold = 0;
   for (let i = 0; i < n; i++) {
