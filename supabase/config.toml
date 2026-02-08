@@ -1,0 +1,10 @@
+project_id = "rbajgyyfinboroltcofy"
+
+[functions.analyze-facilities]
+verify_jwt = false
+
+[functions.databricks-integration]
+verify_jwt = false
+
+[functions.facility-insights]
+verify_jwt = false

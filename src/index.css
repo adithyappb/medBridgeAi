@@ -1,0 +1,255 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* MedBridge-AI Healthcare Intelligence Platform
+   Design System: Clinical, trustworthy, data-forward
+   Inspired by modern health-tech dashboards
+*/
+
+@layer base {
+  :root {
+    /* Enforcing Dark Matte Black Globally */
+    --background: 240 10% 3.9%;
+    /* #09090b */
+    --foreground: 0 0% 98%;
+
+    --card: 240 10% 6%;
+    --card-foreground: 0 0% 98%;
+
+    --popover: 240 10% 6%;
+    --popover-foreground: 0 0% 98%;
+
+    --primary: 187 70% 50%;
+    --primary-foreground: 240 5.9% 10%;
+    --primary-muted: 187 40% 15%;
+
+    --secondary: 240 3.7% 15.9%;
+    --secondary-foreground: 0 0% 98%;
+
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+
+    --accent: 240 3.7% 15.9%;
+    --accent-foreground: 0 0% 98%;
+
+    --success: 152 55% 48%;
+    --success-foreground: 152 60% 10%;
+    --success-muted: 152 40% 15%;
+
+    --warning: 38 85% 55%;
+    --warning-foreground: 38 92% 10%;
+    --warning-muted: 38 60% 15%;
+
+    --danger: 0 65% 55%;
+    --danger-foreground: 0 0% 100%;
+    --danger-muted: 0 55% 15%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 240 4.9% 83.9%;
+
+    --radius: 0.625rem;
+
+    --sidebar-background: 240 10% 3.9%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 187 70% 50%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 187 70% 50%;
+
+    /* Healthcare specific colors */
+    --facility-hospital: 187 72% 45%;
+    --facility-clinic: 262 52% 55%;
+    --facility-health-center: 152 60% 42%;
+    --medical-desert: 0 72% 51%;
+    --coverage-good: 152 60% 42%;
+    --coverage-limited: 38 92% 50%;
+    --coverage-critical: 0 72% 51%;
+
+    /* Matte Gradients */
+    --gradient-hero: linear-gradient(135deg, hsl(187 70% 40%) 0%, hsl(240 5% 20%) 100%);
+    --gradient-card-hover: linear-gradient(180deg, hsl(240 10% 6%) 0%, hsl(240 10% 4%) 100%);
+    --gradient-sidebar: linear-gradient(180deg, hsl(240 10% 3.9%) 0%, hsl(240 10% 3.9%) 100%);
+
+    /* Shadows */
+    --shadow-sm: 0 1px 2px 0 hsl(0 0% 0% / 0.5);
+    --shadow-md: 0 4px 6px -1px hsl(0 0% 0% / 0.5), 0 2px 4px -2px hsl(0 0% 0% / 0.5);
+    --shadow-lg: 0 10px 15px -3px hsl(0 0% 0% / 0.5), 0 4px 6px -4px hsl(0 0% 0% / 0.5);
+    --shadow-xl: 0 20px 25px -5px hsl(0 0% 0% / 0.5), 0 8px 10px -6px hsl(0 0% 0% / 0.5);
+    --shadow-card: 0 1px 3px 0 hsl(0 0% 0% / 0.5), 0 1px 2px -1px hsl(0 0% 0% / 0.5);
+    --shadow-card-hover: 0 10px 20px -5px hsl(187 70% 50% / 0.15), 0 4px 8px -4px hsl(0 0% 0% / 0.5);
+
+    /* Typography */
+    --font-sans: 'Inter', system-ui, sans-serif;
+    --font-display: 'Space Grotesk', system-ui, sans-serif;
+  }
+
+  .dark {
+    /* Re-use root vars for consistency */
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
+    /* Same as root */
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: var(--font-sans);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-display);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: var(--font-sans);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-display);
+  }
+}
+
+@layer components {
+
+  /* Healthcare Status Badges */
+  .status-operational {
+    @apply bg-success/10 text-success border border-success/20;
+  }
+
+  .status-limited {
+    @apply bg-warning/10 text-warning border border-warning/20;
+  }
+
+  .status-critical {
+    @apply bg-danger/10 text-danger border border-danger/20;
+  }
+
+  /* Map Markers */
+  .map-marker-hospital {
+    background-color: hsl(var(--facility-hospital));
+  }
+
+  .map-marker-clinic {
+    background-color: hsl(var(--facility-clinic));
+  }
+
+  .map-marker-health-center {
+    background-color: hsl(var(--facility-health-center));
+  }
+
+  /* Metric Cards */
+  .metric-card {
+    @apply bg-card rounded-xl p-5 border border-border;
+    box-shadow: var(--shadow-card);
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+  }
+
+  .metric-card:hover {
+    box-shadow: var(--shadow-card-hover);
+    transform: translateY(-2px);
+  }
+
+  /* Agent Chat */
+  .agent-message {
+    @apply bg-primary/5 border border-primary/10 rounded-2xl rounded-tl-sm p-4;
+  }
+
+  .user-message {
+    @apply bg-secondary rounded-2xl rounded-tr-sm p-4;
+  }
+
+  /* Data Tables */
+  .data-row {
+    @apply border-b border-border/50 hover:bg-muted/50 transition-colors;
+  }
+
+  /* Pulse animation for live indicators */
+  .pulse-live {
+    animation: pulse-live 2s infinite;
+  }
+
+  @keyframes pulse-live {
+
+    0%,
+    100% {
+      opacity: 1;
+    }
+
+    50% {
+      opacity: 0.5;
+    }
+  }
+
+  /* Gradient text */
+  .gradient-text {
+    background: var(--gradient-hero);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Glass effect */
+  .glass {
+    background: hsl(var(--card) / 0.8);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .scrollbar-thin {
+    scrollbar-width: thin;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: hsl(var(--muted));
+    border-radius: 3px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background: hsl(var(--border));
+    border-radius: 3px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--muted-foreground) / 0.5);
+  }
+}
